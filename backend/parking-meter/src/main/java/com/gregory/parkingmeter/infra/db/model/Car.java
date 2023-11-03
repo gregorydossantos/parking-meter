@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-
 @Entity
 @Builder
 @Data
@@ -29,7 +28,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "license_plate",unique = true)
     @Size(max = 7)
     private String licensePlate;
 
