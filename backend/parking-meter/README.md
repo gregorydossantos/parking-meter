@@ -25,7 +25,13 @@ This project consists of creating a rest api, using the main technologies availa
 #### Database Model
 ![Web 1](https://github.com/gregorydossantos/parking-meter/blob/develop/assets/databases/parking-lot-db.png)
 
-#### Sequence Diagram - API
+#### Sequence Diagram - API Park
+![Web 1](https://github.com/gregorydossantos/parking-meter/blob/develop/assets/sequence-diagram/api-park-get.png)
+![Web 1](https://github.com/gregorydossantos/parking-meter/blob/develop/assets/sequence-diagram/api-park-post.png)
+
+#### Sequence Diagram - API Car
+![Web 1](https://github.com/gregorydossantos/parking-meter/blob/develop/assets/sequence-diagram/api-car-post.png)
+![Web 1](https://github.com/gregorydossantos/parking-meter/blob/develop/assets/sequence-diagram/api-car-delete.png)
 
 #### Notes:
 To create the database and upload it locally, first confirm that you have docker installed on your machine, after that follow these steps:
