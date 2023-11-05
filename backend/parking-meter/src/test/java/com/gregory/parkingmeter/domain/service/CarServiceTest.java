@@ -1,35 +1,36 @@
-package com.gregory.parkingmeter.app.rest;
+package com.gregory.parkingmeter.domain.service;
 
 import com.gregory.parkingmeter.commons.AbstractUseful;
-import com.gregory.parkingmeter.domain.dto.CarDto;
-import com.gregory.parkingmeter.domain.service.CarService;
+import com.gregory.parkingmeter.domain.usecase.CarUseCase;
+import com.gregory.parkingmeter.infra.db.repository.CarRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CarControllerTest extends AbstractUseful {
+public class CarServiceTest extends AbstractUseful {
 
-    @InjectMocks
-    private CarController controller;
+    @Autowired
+    private CarService service;
+
+    @Autowired
+    private CarRepository repository;
 
     @Mock
-    private CarService service;
+    private CarUseCase useCase;
 
     @BeforeEach
     void setUp() {
@@ -37,22 +38,22 @@ public class CarControllerTest extends AbstractUseful {
     }
 
     @Test
-    @DisplayName("Should be return a http status 201 - created")
+    @DisplayName("Should be return successful after save a car")
     void saveCarTest() {
         var mock = buildMockDto();
-        when(service.save(any())).thenReturn(mock);
+        when(useCase.save(any())).thenReturn(mock);
 
         var request = buildMockRequest(LICENSE_PLATE, BALANCE, RETIREE);
-        ResponseEntity<CarDto> response = controller.save(request);
-        assertNotNull(response);
+        var car = service.save(request);
+        assertNotNull(car);
     }
 
     @Test
-    @DisplayName("Should be return a http status 200 - success")
+    @DisplayName("Should be return successful after delete a car")
     void deleteCarTest() {
-        controller.delete(1L);
+        service.delete(1L);
 
-        assertEquals(HttpStatus.OK.value(), 200);
+        var car = repository.findById(1L);
+        assertTrue(car.isEmpty());
     }
-
 }

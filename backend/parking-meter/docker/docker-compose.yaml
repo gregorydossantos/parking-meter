@@ -1,10 +1,11 @@
 version: '3'
 
 services:
-  local-postgres-compose:
+  db:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: "12345"
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=parking-meter_db
     ports:
       - "5433:5432"
     volumes:
