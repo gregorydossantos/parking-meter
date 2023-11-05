@@ -42,7 +42,7 @@ public class CarControllerTest extends AbstractUseful {
         var mock = buildMockDto();
         when(service.save(any())).thenReturn(mock);
 
-        var request = buildMockRequest(LICENSE_PLATE, BALANCE, RETIREE);
+        var request = buildMockRequest(LICENSE_PLATE, BALANCE);
         ResponseEntity<CarDto> response = controller.save(request);
         assertNotNull(response);
     }

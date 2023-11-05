@@ -18,8 +18,4 @@ public class CarRequest {
     @NotNull
     private BigDecimal balance;
 
-    @NotNull
-    @Size(max = 1)
-    private String retiree;
-
 }

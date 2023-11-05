@@ -50,7 +50,6 @@ public class CarUseCase {
         var car = Car.builder()
                 .licensePlate(request.getLicensePlate())
                 .balance(request.getBalance())
-                .retiree(request.getRetiree())
                 .build();
 
         return repository.save(car);

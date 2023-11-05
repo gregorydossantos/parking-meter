@@ -1,15 +1,14 @@
 package com.gregory.parkingmeter.app.rest;
 
+import com.gregory.parkingmeter.app.request.ParkRequest;
 import com.gregory.parkingmeter.app.response.ParkResponse;
-import com.gregory.parkingmeter.domain.dto.ParkDto;
 import com.gregory.parkingmeter.domain.service.ParkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
+import jakarta.ws.rs.BeanParam;
 import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -27,8 +25,6 @@ import java.util.List;
 @RequestMapping(value = "/v1/park", produces = {"application/json"})
 public class ParkController {
 
-    final static String PATH_LICENSE_PLATE = "/{licensePlate}";
-
     final ParkService service;
 
     @Operation(summary = "Parking a car", method = "POST")
@@ -37,11 +33,10 @@ public class ParkController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal error")
     })
-    @PostMapping(PATH_LICENSE_PLATE)
-    public ResponseEntity<ParkResponse> park(@PathParam("licensePlate") String licensePlate,
-                                             @PathParam("balance") BigDecimal value) {
+    @PostMapping
+    public ResponseEntity<ParkResponse> park(@BeanParam ParkRequest request) {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand
-                (service.parking(licensePlate, value)).toUri();
+                (service.parking(request)).toUri();
         return ResponseEntity.created(uri).build();
     }
 
@@ -51,8 +46,8 @@ public class ParkController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal error")
     })
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ParkDto>> parkList() {
+    @GetMapping
+    public ResponseEntity<List<ParkResponse>> parkList() {
         return ResponseEntity.ok(service.parkingList());
     }
 

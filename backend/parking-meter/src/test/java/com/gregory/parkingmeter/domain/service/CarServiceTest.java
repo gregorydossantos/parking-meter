@@ -43,7 +43,7 @@ public class CarServiceTest extends AbstractUseful {
         var mock = buildMockDto();
         when(useCase.save(any())).thenReturn(mock);
 
-        var request = buildMockRequest(LICENSE_PLATE, BALANCE, RETIREE);
+        var request = buildMockRequest(LICENSE_PLATE, BALANCE);
         var car = service.save(request);
         assertNotNull(car);
     }

@@ -3,8 +3,11 @@ package com.gregory.parkingmeter.app.request;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import jakarta.ws.rs.QueryParam;
 import lombok.Builder;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 @Data
 @Builder
@@ -15,6 +18,11 @@ public class ParkRequest {
     @NotNull
     @Size(max = 7)
     @Pattern(regexp = ALPHA_NUMERIC)
+    @QueryParam("licensePlate")
     private String licensePlate;
+
+    @NotNull
+    @QueryParam("value")
+    private BigDecimal value;
 
 }

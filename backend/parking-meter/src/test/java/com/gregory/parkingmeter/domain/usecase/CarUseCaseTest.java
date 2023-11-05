@@ -39,7 +39,7 @@ public class CarUseCaseTest extends AbstractUseful {
     @Test
     @DisplayName("Should be return a car after save")
     void saveCarTest() {
-        var request = buildMockRequest(LICENSE_PLATE, BALANCE, RETIREE);
+        var request = buildMockRequest(LICENSE_PLATE, BALANCE);
         var car = useCase.save(request);
 
         assertNotNull(car);
@@ -48,7 +48,7 @@ public class CarUseCaseTest extends AbstractUseful {
     @Test
     @DisplayName("Should be return error - car already exists")
     void saveCarAlreadyExistsTest() {
-        var request = buildMockRequest("ABC0123", BigDecimal.TEN, "N");
+        var request = buildMockRequest("ABC0123", BigDecimal.TEN);
 
         assertThrows(DataIntegrityException.class, () -> useCase.save(request));
     }

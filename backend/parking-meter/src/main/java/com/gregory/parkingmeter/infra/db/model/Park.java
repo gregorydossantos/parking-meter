@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,5 +35,8 @@ public class Park {
     @Column(name = "license_plate", unique = true)
     @Size(max = 7)
     private String licensePlate;
+
+    @Column(name = "park_value")
+    private BigDecimal value;
 
 }

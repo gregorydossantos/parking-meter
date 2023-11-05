@@ -9,13 +9,11 @@ public abstract class AbstractUseful {
 
     public static final String LICENSE_PLATE = "DEF4567";
     public static final BigDecimal BALANCE = BigDecimal.TEN;
-    public static final String RETIREE = "N";
 
-    public static CarRequest buildMockRequest(String licensePlate, BigDecimal balance, String retiree) {
+    public static CarRequest buildMockRequest(String licensePlate, BigDecimal balance) {
         return CarRequest.builder()
                 .licensePlate(licensePlate)
                 .balance(balance)
-                .retiree(retiree)
                 .build();
     }
 
@@ -24,7 +22,6 @@ public abstract class AbstractUseful {
                 .id(2L)
                 .licensePlate("DEF4567")
                 .balance(BigDecimal.TEN)
-                .retiree("N")
                 .build();
     }
 

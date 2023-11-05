@@ -32,8 +32,6 @@ public class Car {
     @Size(max = 7)
     private String licensePlate;
 
-    @Size(max = 1)
-    private String retiree;
     private BigDecimal balance;
 
 }

@@ -1,10 +1,12 @@
 package com.gregory.parkingmeter.domain.usecase;
 
+import com.gregory.parkingmeter.app.request.ParkRequest;
 import com.gregory.parkingmeter.app.response.ParkResponse;
 import com.gregory.parkingmeter.domain.dto.ParkDto;
 import com.gregory.parkingmeter.domain.exception.CalculateTimeExpirationException;
 import com.gregory.parkingmeter.domain.exception.DataNullOrEmptyException;
 import com.gregory.parkingmeter.domain.exception.InsufficientBalanceException;
+import com.gregory.parkingmeter.domain.useful.ValidationUseful;
 import com.gregory.parkingmeter.infra.db.model.Car;
 import com.gregory.parkingmeter.infra.db.model.Park;
 import com.gregory.parkingmeter.infra.db.repository.CarRepository;
@@ -17,7 +19,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -30,24 +31,29 @@ public class ParkUseCase {
 
     final ParkRepository repository;
     final CarRepository carRepository;
+    final ValidationUseful validator;
     final ModelMapper mapper;
 
-    public ParkResponse parking(String licensePlate, BigDecimal value) {
-        var car = carExists(licensePlate);
+    public ParkResponse parking(ParkRequest request) {
+        validator.validateRequest(request);
 
-        hasBalance(car, value);
+        var car = carExists(request.getLicensePlate());
 
-        var response = toResponse(car, value);
+        hasBalance(car, request.getValue());
+
+        var response = toResponse(car, request.getValue());
         return mapper.map(response, ParkResponse.class);
     }
 
-    public List<ParkDto> parkingList() {
+    public List<ParkResponse> parkingList() {
         var parkList = repository.findAll();
 
         if (parkList.isEmpty())
             throw new DataNullOrEmptyException(PARK_NOT_FOUND);
 
-        return parkList.stream().map(park -> mapper.map(park, ParkDto.class)).collect(Collectors.toList());
+        List<ParkDto> parkDtoList = parkList.stream().map(park -> toParkDto(park, park.getValue())).toList();
+
+        return parkDtoList.stream().map(parkDto -> mapper.map(parkDto, ParkResponse.class)).toList();
     }
 
     private Car carExists(String licensePlate) {
@@ -64,13 +70,14 @@ public class ParkUseCase {
             throw new InsufficientBalanceException(INSUFFICIENT_BALANCE);
 
         car.setBalance(result);
-        //carRepository.saveAndFlush(car);
+        carRepository.saveAndFlush(car);
     }
 
     private ParkDto toResponse(Car car, BigDecimal value) {
         return toParkDto(savePark(Park.builder()
                 .dateTime(LocalDateTime.now())
                 .licensePlate(car.getLicensePlate())
+                .value(value)
                 .build()), value);
     }
 
@@ -97,4 +104,5 @@ public class ParkUseCase {
         }
         throw new CalculateTimeExpirationException(UNABLE_CALCULATE_EXPIRATION);
     }
+
 }
