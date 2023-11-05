@@ -1,8 +1,8 @@
 package com.gregory.parkingmeter.app.rest;
 
+import com.gregory.parkingmeter.app.response.ParkResponse;
 import com.gregory.parkingmeter.commons.AbstractUseful;
-import com.gregory.parkingmeter.domain.dto.CarDto;
-import com.gregory.parkingmeter.domain.service.CarService;
+import com.gregory.parkingmeter.domain.service.ParkService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,11 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -23,13 +23,13 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CarControllerTest extends AbstractUseful {
+public class ParkControllerTest extends AbstractUseful {
 
     @InjectMocks
-    private CarController controller;
+    private ParkController controller;
 
     @Mock
-    private CarService service;
+    private ParkService service;
 
     @BeforeEach
     void setUp() {
@@ -38,21 +38,23 @@ public class CarControllerTest extends AbstractUseful {
 
     @Test
     @DisplayName("Should be return a http status 201 - created")
-    void saveCarTest() {
-        var mock = buildMockDto();
-        when(service.save(any())).thenReturn(mock);
+    void saveParkTest() {
+        var mock = buildMockParkResponse();
+        when(service.parking(any())).thenReturn(mock);
 
-        var request = buildMockRequest(LICENSE_PLATE, BALANCE);
-        ResponseEntity<CarDto> response = controller.save(request);
+        var request = buildMockParkRequest();
+        ResponseEntity<ParkResponse> response = controller.park(request);
         assertNotNull(response);
     }
 
     @Test
     @DisplayName("Should be return a http status 200 - success")
-    void deleteCarTest() {
-        controller.delete(1L);
+    void getParkedListTest() {
+        var mock = buildMockParkResponse();
+        when(service.parkingList()).thenReturn(List.of(mock));
 
-        assertEquals(HttpStatus.OK.value(), 200);
+        ResponseEntity<List<ParkResponse>> response = controller.parkList();
+        assertNotNull(response);
     }
 
 }

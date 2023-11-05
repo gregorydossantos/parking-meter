@@ -1,24 +1,21 @@
 package com.gregory.parkingmeter.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
-import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarDto {
+public class ParkDto {
 
-    @JsonProperty(access = WRITE_ONLY)
     private Long id;
+    private LocalDateTime dateTime;
+    private LocalDateTime timeExpiration;
     private String licensePlate;
-    private BigDecimal balance;
-    
+
 }

@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -21,17 +22,21 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_cars")
-public class Car {
+@Table(name = "tb_park")
+public class Park {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "license_plate",unique = true)
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
+
+    @Column(name = "license_plate", unique = true)
     @Size(max = 7)
     private String licensePlate;
 
-    private BigDecimal balance;
+    @Column(name = "park_value")
+    private BigDecimal value;
 
 }

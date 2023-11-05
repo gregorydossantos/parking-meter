@@ -1,8 +1,7 @@
 package com.gregory.parkingmeter.domain.service;
 
 import com.gregory.parkingmeter.commons.AbstractUseful;
-import com.gregory.parkingmeter.domain.usecase.CarUseCase;
-import com.gregory.parkingmeter.infra.db.repository.CarRepository;
+import com.gregory.parkingmeter.domain.usecase.ParkUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,24 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CarServiceTest extends AbstractUseful {
+public class ParkServiceTest extends AbstractUseful {
 
     @Autowired
-    private CarService service;
-
-    @Autowired
-    private CarRepository repository;
+    private ParkService service;
 
     @Mock
-    private CarUseCase useCase;
+    private ParkUseCase useCase;
 
     @BeforeEach
     void setUp() {
@@ -38,22 +35,25 @@ public class CarServiceTest extends AbstractUseful {
     }
 
     @Test
-    @DisplayName("Should be return successful after save a car")
-    void saveCarTest() {
-        var mock = buildMockDto();
-        when(useCase.save(any())).thenReturn(mock);
+    @DisplayName("Should be return successful after parked a car")
+    void saveParkTest() {
+        var mock = buildMockParkResponse();
+        when(useCase.parking(any())).thenReturn(mock);
 
-        var request = buildMockRequest(LICENSE_PLATE, BALANCE);
-        var car = service.save(request);
+        var request = buildMockParkRequest();
+        var car = service.parking(request);
         assertNotNull(car);
     }
 
     @Test
-    @DisplayName("Should be return successful after delete a car")
-    void deleteCarTest() {
-        service.delete(1L);
+    @DisplayName("Should be return a car parked list")
+    void listAllCarsParkedTest() {
+        var mock = buildMockParkResponse();
+        when(useCase.parkingList()).thenReturn(List.of(mock));
 
-        var car = repository.findById(1L);
-        assertTrue(car.isEmpty());
+        var request = buildMockParkRequest();
+        var car = service.parking(request);
+        assertNotNull(car);
     }
+
 }
