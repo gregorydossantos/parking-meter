@@ -1,5 +1,7 @@
 package com.gregory.parkingmeter.app.request;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -21,6 +23,8 @@ public class ParkRequest {
     @QueryParam("licensePlate")
     private String licensePlate;
 
+    @Min(1)
+    @Max(2)
     @NotNull
     @QueryParam("value")
     private BigDecimal value;

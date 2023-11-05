@@ -1,7 +1,9 @@
 package com.gregory.parkingmeter.app.exception;
 
+import com.gregory.parkingmeter.domain.exception.CalculateTimeExpirationException;
 import com.gregory.parkingmeter.domain.exception.DataIntegrityException;
 import com.gregory.parkingmeter.domain.exception.DataNullOrEmptyException;
+import com.gregory.parkingmeter.domain.exception.InsufficientBalanceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,8 @@ public class ControllerHandlerExceptionTest {
     private static final String DATA_NOT_FOUND = "Vehicle not found!";
     private static final String DATA_ALREADY_EXISTS = "Vehicle already registered!";
     private static final String BAD_REQUEST = "Error in the context of the request!";
+    static final String INSUFFICIENT_BALANCE = "Insufficient balance!";
+    static final String UNABLE_CALCULATE_EXPIRATION = "Unable to calculate expiration time!";
 
     @InjectMocks
     private ControllerHandlerException exceptionHandler;
@@ -57,7 +61,7 @@ public class ControllerHandlerExceptionTest {
 
         assertNotNull(response);
         assertNotNull(response.getBody());
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(StandardError.class, response.getBody().getClass());
     }
@@ -71,8 +75,37 @@ public class ControllerHandlerExceptionTest {
 
         assertNotNull(response);
         assertNotNull(response.getBody());
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(StandardError.class, response.getBody().getClass());
     }
+
+    @Test
+    @DisplayName("Should be return CalculateTimeExpirationException")
+    void testWhenCannotCalculateTimePark() {
+        ResponseEntity<StandardError> response = exceptionHandler.calculateException(
+                new CalculateTimeExpirationException(UNABLE_CALCULATE_EXPIRATION),
+                new MockHttpServletRequest());
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(StandardError.class, response.getBody().getClass());
+    }
+
+    @Test
+    @DisplayName("Should be return InsufficientBalanceException")
+    void testWhenTryParkWithoutBalance() {
+        ResponseEntity<StandardError> response = exceptionHandler.insufficientBalanceException(
+                new InsufficientBalanceException(INSUFFICIENT_BALANCE),
+                new MockHttpServletRequest());
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(StandardError.class, response.getBody().getClass());
+    }
+
 }
